@@ -70,9 +70,9 @@ class ActivitySettings : ActivityBase() {
 
     override fun onInitData() {
         super.onInitData()
-        val dataLocalTmpConfigFile = File("/data/local/tmp/appenv.xposed.json")
-        if (dataLocalTmpConfigFile.exists() && dataLocalTmpConfigFile.canRead() && dataLocalTmpConfigFile.canWrite())
-            Settings.Instance.isUseDataLocalTmpConfig = true
+//        val dataLocalTmpConfigFile = File("/data/local/tmp/appenv.xposed.json")
+//        if (dataLocalTmpConfigFile.exists() && dataLocalTmpConfigFile.canRead() && dataLocalTmpConfigFile.canWrite())
+//            Settings.Instance.isUseDataLocalTmpConfig = false
 
         oiwShowSystemApp.setCheckedImmediatelyNoEvent(Settings.Instance.isShowSystemApp)
 //        oiwShowDesktopIcon.setCheckedImmediatelyNoEvent(Settings.Instance.isShowDesktopIcon)

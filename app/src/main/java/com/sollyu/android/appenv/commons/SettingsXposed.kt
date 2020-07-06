@@ -79,17 +79,19 @@ class SettingsXposed {
 //        }
     }
 
-    private val fileAppDataConfig   = File(Application.Instance.filesDir, "appenv.xposed.json")
+//    private val fileAppDataConfig   = File(Application.Instance.filesDir, "appenv.xposed.json")
     private val fileExtendConfig    = File(Application.Instance.getExternalFilesDir(null), "appenv.xposed.json")
-    private val fileDataLocalConfig = File("/data/local/tmp/appenv.xposed.json")
+//    private val fileDataLocalConfig = File("/data/local/tmp/appenv.xposed.json")
 
     val file: File by lazy {
-        if (Settings.Instance.isUseAppDataConfig)
-            fileAppDataConfig
-        else if (Settings.Instance.isUseDataLocalTmpConfig)
-            fileDataLocalConfig
-        else
-            fileExtendConfig
+        fileExtendConfig
+
+//        if (Settings.Instance.isUseAppDataConfig)
+//            fileAppDataConfig
+//        else if (Settings.Instance.isUseDataLocalTmpConfig)
+//            fileDataLocalConfig
+//        else
+//            fileExtendConfig
     }
 
     var jsonObject = JSONObject()
@@ -118,14 +120,14 @@ class SettingsXposed {
         FileUtils.write(file, JSON.toJSONString(jsonObject, true), "UTF-8")
     }
 
-    fun resetPermissions() {
-        if (Settings.Instance.isUseAppDataConfig) {
+//    fun resetPermissions() {
+//        if (Settings.Instance.isUseAppDataConfig) {
 //            XLog.d("${file.absolutePath} resetPermissions")
-            file.setReadable(true, false)
-            file.setWritable(true, false)
-            file.setExecutable(true,false)
-        }
-    }
+//            file.setReadable(true, false)
+//            file.setWritable(true, false)
+//            file.setExecutable(true,false)
+//        }
+//    }
 
     /**
      * 删除一个配置文件
