@@ -41,8 +41,14 @@ class Random {
         LOLLIPOP_MR1          ("5.0"  , Build.VERSION_CODES.LOLLIPOP_MR1)            ,
         M                     ("6.0"  , Build.VERSION_CODES.M)                       ,
         N                     ("7.0"  , Build.VERSION_CODES.N)                       ,
-        ;
 
+        N_MR1                 ("7.1"  , Build.VERSION_CODES.N_MR1)                   ,
+        O                     ("8.0"  , Build.VERSION_CODES.O)                       ,
+        O_MR1                 ("8.1"  , Build.VERSION_CODES.O_MR1)                   ,
+        P                     ("9.0"  , Build.VERSION_CODES.P)                       ,
+        Q                     ("10"  , 29)                       ,
+        V11                     ("11"  , 30)                       ,
+        ;
         companion object {
             fun get(versionName: String): ANDROID_VERSION = ANDROID_VERSION.values().first { it.versionName == versionName }
         }
