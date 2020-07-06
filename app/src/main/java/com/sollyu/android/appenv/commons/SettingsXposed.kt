@@ -13,7 +13,7 @@ import com.alibaba.fastjson.JSONObject
 import org.apache.commons.io.FileUtils
 import java.io.File
 //import com.elvishew.xlog.XLog
-import eu.chainfire.libsuperuser.Shell
+//import eu.chainfire.libsuperuser.Shell
 
 
 /**
@@ -30,53 +30,53 @@ class SettingsXposed {
             Instance = SettingsXposed()
         }
 
-        @Synchronized
-        fun Save() {
-            when {
-                Settings.Instance.isUseDataLocalTmpConfig -> {
-//                    XLog.d("use data local tmp")
-                    // 使用Root命令进行创建
-                    if (!Instance.fileDataLocalConfig.exists()) {
-                        Shell.SU.run("touch /data/local/tmp/appenv.xposed.json")
-                        Shell.SU.run("chmod 777 /data/local/tmp/appenv.xposed.json")
-                    }
-
-                    // 文件依然还不存在
-                    if (!Instance.fileDataLocalConfig.exists()) {
-//                        XLog.e("/data/local/tmp/appenv.xposed.json not exist")
-                        throw RuntimeException("/data/local/tmp/appenv.xposed.json not exist")
-                    }
-
-                    // 文件没有写的权限
-                    if (!Instance.fileDataLocalConfig.canWrite()) {
-                        Shell.SU.run("chmod 777 /data/local/tmp/appenv.xposed.json")
-                    }
-                    // 文件依然没有写的权限
-                    if (!Instance.fileDataLocalConfig.canWrite()) {
-//                        XLog.e("/data/local/tmp/appenv.xposed.json can not write")
-                        throw RuntimeException("/data/local/tmp/appenv.xposed.json can not write")
-                    }
-
-                    FileUtils.write(Instance.fileDataLocalConfig, JSON.toJSONString(Instance.jsonObject, true), "UTF-8")
-                    try { FileUtils.forceDelete(Instance.fileAppDataConfig) } catch (e: Exception) { }
-                    try { FileUtils.forceDelete(Instance.fileExtendConfig)  } catch (e: Exception) { }
-                }
-                Settings.Instance.isUseAppDataConfig -> {
-//                    XLog.d("use app data")
-                    FileUtils.write(Instance.fileAppDataConfig, JSON.toJSONString(Instance.jsonObject, true), "UTF-8")
-                    try { FileUtils.forceDelete(Instance.fileExtendConfig) } catch (e: Exception) { }
-                    try { Shell.SU.run("rm " + Instance.fileDataLocalConfig) } catch (e: Exception) { }
-                }
-                else -> {
-//                    XLog.d("use ext")
-                    FileUtils.write(Instance.fileExtendConfig, JSON.toJSONString(Instance.jsonObject, true), "UTF-8")
-                    try { FileUtils.forceDelete(Instance.fileAppDataConfig) } catch (e: Exception) { }
-                    try { Shell.SU.run("rm " + Instance.fileDataLocalConfig) } catch (e: Exception) {
-//                        XLog.e(e.message, e)
-                    }
-                }
-            }
-        }
+//        @Synchronized
+//        fun Save() {
+//            when {
+//                Settings.Instance.isUseDataLocalTmpConfig -> {
+////                    XLog.d("use data local tmp")
+//                    // 使用Root命令进行创建
+//                    if (!Instance.fileDataLocalConfig.exists()) {
+//                        Shell.SU.run("touch /data/local/tmp/appenv.xposed.json")
+//                        Shell.SU.run("chmod 777 /data/local/tmp/appenv.xposed.json")
+//                    }
+//
+//                    // 文件依然还不存在
+//                    if (!Instance.fileDataLocalConfig.exists()) {
+////                        XLog.e("/data/local/tmp/appenv.xposed.json not exist")
+//                        throw RuntimeException("/data/local/tmp/appenv.xposed.json not exist")
+//                    }
+//
+//                    // 文件没有写的权限
+//                    if (!Instance.fileDataLocalConfig.canWrite()) {
+//                        Shell.SU.run("chmod 777 /data/local/tmp/appenv.xposed.json")
+//                    }
+//                    // 文件依然没有写的权限
+//                    if (!Instance.fileDataLocalConfig.canWrite()) {
+////                        XLog.e("/data/local/tmp/appenv.xposed.json can not write")
+//                        throw RuntimeException("/data/local/tmp/appenv.xposed.json can not write")
+//                    }
+//
+//                    FileUtils.write(Instance.fileDataLocalConfig, JSON.toJSONString(Instance.jsonObject, true), "UTF-8")
+//                    try { FileUtils.forceDelete(Instance.fileAppDataConfig) } catch (e: Exception) { }
+//                    try { FileUtils.forceDelete(Instance.fileExtendConfig)  } catch (e: Exception) { }
+//                }
+//                Settings.Instance.isUseAppDataConfig -> {
+////                    XLog.d("use app data")
+//                    FileUtils.write(Instance.fileAppDataConfig, JSON.toJSONString(Instance.jsonObject, true), "UTF-8")
+//                    try { FileUtils.forceDelete(Instance.fileExtendConfig) } catch (e: Exception) { }
+//                    try { Shell.SU.run("rm " + Instance.fileDataLocalConfig) } catch (e: Exception) { }
+//                }
+//                else -> {
+////                    XLog.d("use ext")
+//                    FileUtils.write(Instance.fileExtendConfig, JSON.toJSONString(Instance.jsonObject, true), "UTF-8")
+//                    try { FileUtils.forceDelete(Instance.fileAppDataConfig) } catch (e: Exception) { }
+//                    try { Shell.SU.run("rm " + Instance.fileDataLocalConfig) } catch (e: Exception) {
+////                        XLog.e(e.message, e)
+//                    }
+//                }
+//            }
+//        }
     }
 
     private val fileAppDataConfig   = File(Application.Instance.filesDir, "appenv.xposed.json")
