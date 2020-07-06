@@ -174,7 +174,17 @@ public class XposedEntryJava implements IXposedHookLoadPackage {
                 }
             });
         }
-
+        if (xposedPackageJson.has("android.os.SystemProperties.android_id")) {
+            XposedBridgeHookAllMethods(android.provider.Settings.Secure.class, "getString", new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam methodHookParam) throws Throwable {
+                    super.afterHookedMethod(methodHookParam);
+                    if (methodHookParam.args.length > 1 && "android_id".equals(methodHookParam.args[1].toString())) {
+                        methodHookParam.setResult(xposedPackageJson.getString("android.os.SystemProperties.android_id"));
+                    }
+                }
+            });
+        }
         if (xposedPackageJson.has("android.telephony.TelephonyManager.getLine1Number")) {
             XposedBridgeHookAllMethods(TelephonyManager.class, "getLine1Number", new MethodHookValue(xposedPackageJson.getString("android.telephony.TelephonyManager.getLine1Number")));
         }

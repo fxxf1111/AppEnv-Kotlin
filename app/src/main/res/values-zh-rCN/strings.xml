@@ -42,7 +42,7 @@
     <string name="random_all">全部随机</string>
     <string name="run_app">运行程序</string>
     <string name="wipe_data">清除数据</string>
-    <string name="force_stop_app">强制停止</string>
+    <string name="force_stop_app">强制停止/清除数据</string>
     <string name="save_config">保存配置</string>
     <string name="random">随机</string>
     <string name="delete_config">删除配置</string>
