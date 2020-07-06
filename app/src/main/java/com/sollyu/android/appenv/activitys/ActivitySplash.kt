@@ -15,7 +15,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 //import com.elvishew.xlog.XLog
 import com.sollyu.android.appenv.R
 import com.sollyu.android.appenv.commons.Application
-import ru.alexbykov.nopermission.PermissionHelper
+//import ru.alexbykov.nopermission.PermissionHelper
 
 
 /**
@@ -25,7 +25,7 @@ import ru.alexbykov.nopermission.PermissionHelper
  */
 class ActivitySplash : ActivityBase(), Runnable {
 
-    private val permissionHelper by lazy { PermissionHelper(activity) }
+//    private val permissionHelper by lazy { PermissionHelper(activity) }
 
     override fun run() {
 
