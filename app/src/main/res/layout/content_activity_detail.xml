@@ -157,5 +157,15 @@
             style="@style/OptionItem"
             app:leftText="@string/detail_display_dip" />
 
+        <com.sollyu.android.option.item.OptionItemEdit
+            android:id="@+id/visionName"
+            style="@style/OptionItem"
+            app:leftText="visionName" />
+
+        <com.sollyu.android.option.item.OptionItemEdit
+            android:id="@+id/visionCode"
+            style="@style/OptionItem"
+            app:leftText="visionCode" />
+
     </LinearLayout>
 </ScrollView>

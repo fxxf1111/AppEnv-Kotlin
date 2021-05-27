@@ -69,6 +69,12 @@ class BeanHookInfo {
     @JSONField(name = "android.content.res.display.dpi")
     var displayDpi:String? = null
 
+    @JSONField(name = "versionName")
+    var visionName:String? = null
+
+    @JSONField(name = "versionCode")
+    var visionCode:String? = null
+
     @JSONField(serialize = false)
     override fun toString(): String {
         return JSON.toJSONString(this)

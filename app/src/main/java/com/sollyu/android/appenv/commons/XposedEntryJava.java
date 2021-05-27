@@ -9,6 +9,7 @@
 package com.sollyu.android.appenv.commons;
 
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.NetworkInfo;
@@ -16,6 +17,7 @@ import android.net.wifi.WifiInfo;
 import android.os.Build;
 import android.os.Environment;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -37,6 +39,8 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
+import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
+
 /**
  * 作者：sollyu
  * 时间：2018/1/2
@@ -44,6 +48,9 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
  */
 public class XposedEntryJava implements IXposedHookLoadPackage {
     private static final String TAG = "XposedEntryJava";
+    /* 将内容转化成json对象 */
+    JSONObject xposedSettingsJson = null;
+    JSONObject myPackageJsonObject = null;
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable {
@@ -99,8 +106,7 @@ public class XposedEntryJava implements IXposedHookLoadPackage {
             return;
         }
 
-        /* 将内容转化成json对象 */
-        JSONObject xposedSettingsJson = null;
+
         try {
             xposedSettingsJson = new JSONObject(xposedSettingsFileContent);
         } catch (Throwable throwable) {
@@ -111,21 +117,65 @@ public class XposedEntryJava implements IXposedHookLoadPackage {
         JSONObject xposedUserJsonObject = null;
         JSONObject xposedAllJsonObject = null;
         JSONObject xposedPackageJsonObject = null;
-
+        //拦截所有用户app配置
         if (xposedSettingsJson.has("hook.model.user")) {
             xposedUserJsonObject = xposedSettingsJson.getJSONObject("hook.model.user");
         }
+        //拦截用户app及系统app配置
         if (xposedSettingsJson.has("hook.model.all")) {
             xposedAllJsonObject = xposedSettingsJson.getJSONObject("hook.model.all");
         }
+        //单个app配置
         if (xposedSettingsJson.has(loadPackageParam.packageName)) {
             xposedPackageJsonObject = xposedSettingsJson.getJSONObject(loadPackageParam.packageName);
         }
+
 
         final JSONObject xposedPackageJson = mergeJson(loadPackageParam, xposedPackageJsonObject, xposedUserJsonObject, xposedAllJsonObject);
 
         Log.d(TAG, "===================================");
         Log.d(TAG, xposedPackageJson.toString());
+
+//        Log.d("test111", "xposedPackageJson.has versionName ? = "+xposedPackageJson.has("versionName"));
+//        Log.d("test111", "xposedPackageJson.has versionCode ? = "+xposedPackageJson.has("versionCode"));
+
+        if (xposedPackageJson.has("versionName") || xposedPackageJson.has("versionCode")) {
+            //拦截 vision code ,vision name
+            findAndHookMethod("android.app.ApplicationPackageManager ", loadPackageParam.classLoader, "getPackageInfo", String.class, int.class, new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+
+                    PackageInfo packageInfo = (PackageInfo) param.getResult();
+                    String mypackageName = packageInfo.packageName;
+//                    Log.d("test111", "当前调用包名："+mypackageName);
+//                    Log.d("test111", "是否存在当前包名配置文件："+ xposedSettingsJson.has(mypackageName));
+
+                    if (packageInfo != null && xposedSettingsJson.has(mypackageName)) {
+                        myPackageJsonObject = xposedSettingsJson.getJSONObject(mypackageName);
+//                        Log.d("test111", "===========匹配到自定义app============");
+//                        Log.d("test111", "xposedPackageJsonObject = " + myPackageJsonObject.toString());
+                        String configName = myPackageJsonObject.getString("versionName");
+                        String configCode = myPackageJsonObject.getString("versionCode");
+//                        Log.d("test111", "===========config vision name = " + configName+" , origin vision name="+packageInfo.versionName);
+//                        Log.d("test111", "===========config vision code = " + configCode+" , origin vision code="+packageInfo.versionCode);
+
+                        if (configName != null && configName.length() > 0) {
+//                            Log.d("test111", "===========修改 versionName 完成============");
+                            packageInfo.versionName = configName;
+                        }
+                        if (configCode != null && configCode.length() > 0) {
+//                            Log.d("test111", "===========修改 versionCode 完成============");
+                            packageInfo.versionCode = Integer.getInteger(configCode);
+                        }
+                        param.setResult(packageInfo);
+                    }
+                }
+            });
+        }
+
+
+
+
 
         /* 拦截制定包名 */
         final HashMap<String, Object> buildValueHashMap = new HashMap<>();
@@ -339,7 +389,9 @@ public class XposedEntryJava implements IXposedHookLoadPackage {
                 "android.net.wifi.WifiInfo.getBSSID",
                 "android.net.wifi.WifiInfo.getMacAddress",
                 "android.content.res.language",
-                "android.content.res.display.dpi"
+                "android.content.res.display.dpi",
+                "versionName",
+                "versionCode"
         };
         for (String itemName : jsonKey) {
             try {

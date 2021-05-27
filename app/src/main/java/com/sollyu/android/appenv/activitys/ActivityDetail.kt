@@ -295,6 +295,9 @@ class ActivityDetail : ActivityBase() {
 
         oieLanguage.rightEditText = beanHookInfo?.language
         oieDisplayDpi.rightEditText = beanHookInfo?.displayDpi
+
+        visionName.rightEditText = beanHookInfo?.visionName
+        visionCode.rightEditText = beanHookInfo?.visionCode
     }
 
     private fun uiToJsonObject(): JSONObject {
@@ -322,6 +325,9 @@ class ActivityDetail : ActivityBase() {
 
         beanHookInfo.language = oieLanguage.rightEditText.toString()
         beanHookInfo.displayDpi = oieDisplayDpi.rightEditText.toString()
+
+        beanHookInfo.visionName = visionName.rightEditText.toString()
+        beanHookInfo.visionCode = visionCode.rightEditText.toString()
 
         return beanHookInfo.toJSON()
     }
